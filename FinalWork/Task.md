@@ -331,58 +331,58 @@ WHERE TIMESTAMPDIFF(MONTH, Birthday, NOW()) BETWEEN 12 AND 36;
 
 Вывод команд:
 ```
-select a3.name Class, a2.name Animal, Birthday, Commands 
-from
+SELECT a3.name Class, a2.name Animal, a1.name Name,Birthday, Commands 
+FROM
 (
-	SELECT id_pets, Birthday, Commands 
-	from cats
-	union
-	SELECT id_pets, Birthday, Commands 
-	from dogs
-	union
-	SELECT id_pets, Birthday, Commands 
-	from hamsters
+	SELECT id_pets, name, Birthday, Commands 
+	FROM cats
+	UNION
+	SELECT id_pets, name, Birthday, Commands  
+	FROM dogs
+	UNION
+	SELECT id_pets, name, Birthday, Commands  
+	FROM hamsters
 ) a1
-	inner join pets a2 on a1.id_pets = a2.id
-	inner join animals a3 on a2.id_animals = a3.id
-union
-select a3.name Class, a2.name Animal, Birthday, Commands 
-from
+	INNER JOIN pets a2 ON a1.id_pets = a2.id
+	INNER JOIN animals a3 ON a2.id_animals = a3.id
+UNION
+SELECT a3.name Class, a2.name Animal, a1.name Name,Birthday, Commands 
+FROM
 (
-	SELECT id_pack_animals, Birthday, Commands 
-	from horses
-	union
-	SELECT id_pack_animals, Birthday, Commands 
-	from camels
-	union
-	SELECT id_pack_animals, Birthday, Commands 
-	from donkeys
+	SELECT id_pack_animals, name, Birthday, Commands 
+	FROM horses
+	UNION
+	SELECT id_pack_animals, name, Birthday, Commands
+	FROM camels
+	UNION
+	SELECT id_pack_animals, name, Birthday, Commands
+	FROM donkeys
 ) a1
-	inner join pack_animals a2 on a1.id_pack_animals = a2.id
-	inner join animals a3 on a2.id_animals = a3.id;
+	INNER JOIN pack_animals a2 ON a1.id_pack_animals = a2.id
+	INNER JOIN animals a3 ON a2.id_animals = a3.id;
 ```
 
 Результат:
 ```
-+--------------+----------+------------+-------------------------+
-| Class        | Animal   | Birthday   | Commands                |
-+--------------+----------+------------+-------------------------+
-| Pets         | Hamsters | 2023-12-31 | Roll                    |
-| Pets         | Hamsters | 2024-02-02 | Roll                    |
-| Pets         | Hamsters | 2024-01-30 | Play dead               |
-| Pets         | Dogs     | 2022-10-21 | Paw                     |
-| Pets         | Dogs     | 2023-03-11 | Sit,                    |
-| Pets         | Dogs     | 2021-02-12 | Paw                     |
-| Pets         | Cats     | 2019-07-15 | Meow, Sit, Jump         |
-| Pets         | Cats     | 2022-01-09 | Meow                    |
-| Pets         | Cats     | 2021-11-02 | Scratch                 |
-| Pack Animals | Donkeys  | 2017-10-02 | Walk, Stay, Carry Load  |
-| Pack Animals | Donkeys  | 2016-01-01 | Walk, Stay, Carry Load  |
-| Pack Animals | Donkeys  | 2024-03-08 | Walk, Carry Load        |
-| Pack Animals | Horses   | 2014-09-11 | Gallop, Paw             |
-| Pack Animals | Horses   | 2012-06-21 | Gallop                  |
-| Pack Animals | Horses   | 2020-05-03 | Kick                    |
-+--------------+----------+------------+-------------------------+
++--------------+----------+---------+------------+-------------------------+
+| Class        | Animal   | Name    | Birthday   | Commands                |
++--------------+----------+---------+------------+-------------------------+
+| Pets         | Hamsters | Buster  | 2023-12-31 | Roll                    |
+| Pets         | Hamsters | Otto    | 2024-02-02 | Roll                    |
+| Pets         | Hamsters | Peanut  | 2024-01-30 | Play dead               |
+| Pets         | Dogs     | Max     | 2022-10-21 | Paw                     |
+| Pets         | Dogs     | Bonnie  | 2023-03-11 | Sit                  |
+| Pets         | Dogs     | Barney  | 2021-02-12 | Paw                     |
+| Pets         | Cats     | Zeus    | 2019-07-15 | Meow, Sit, Jump         |
+| Pets         | Cats     | Maui    | 2022-01-09 | Meow                    |
+| Pets         | Cats     | Loki    | 2021-11-02 | Scratch                 |
+| Pack Animals | Donkeys  | Nacho   | 2017-10-02 | Walk, Stay, Carry Load  |
+| Pack Animals | Donkeys  | Olaf    | 2016-01-01 | Walk, Stay, Carry Load  |
+| Pack Animals | Donkeys  | Archie  | 2024-03-08 | Walk, Carry Load        |
+| Pack Animals | Horses   | Orion   | 2014-09-11 | Gallop, Paw             |
+| Pack Animals | Horses   | Mango   | 2012-06-21 | Gallop                  |
+| Pack Animals | Horses   | Zeus    | 2020-05-03 | Kick                    |
++--------------+----------+---------+------------+-------------------------+
 ```
 
 13. Создать класс с Инкапсуляцией методов и наследованием по диаграмме.
