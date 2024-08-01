@@ -1,23 +1,12 @@
 from methods import *
-
 from classes.Pet import *
 from classes.PackAnimal import *
-
-animals = {'1':['Рorse', 'Лошадь'], 
-           '2':['Сamel', 'Верблюд'], 
-           '3':['Вonkey', 'Осёл'],
-           '4':['Сat', 'Кот'],
-           '5':['Dog', 'Собака'],
-           '6':['Hamster', 'Хомяк']}
-
-animal_types = {'PackAnimal':'Вьючное животное',
-                'Pet':'Домашнее животное'}
 
 def menu_main():
     command = '-1'
     while command != '0':
-        print('-' * 30)
-        print('Главное меню. Возможные действия:\n'
+        print('-' * 60)
+        print('Главное меню:\n'
             '1. Добавить новое животное\n'
             '2. Вывести всех животных\n'
             '3. Обучить животное новой команде\n'
@@ -42,47 +31,38 @@ def menu_main():
                 #remove_animal()
                 print(4)
             case '0':   
-                print('-' * 30)
+                print('-' * 60)
                 print('До новых встреч!')
+                print('-' * 60)
 
 def menu_add_animal():
 
-    type_animal = '-1'
-    while type_animal < '0' or int(type_animal) > len(animals):
+    animal_type = '-1'
+    while animal_type < '0' or int(animal_type) > len(animal_types):
         print('-' * 30)
         print('Выберите вид животного:')
-        for key in animals:
-            print(f"{key}. {animals[key][1]}")
-        print('0. Выход в главное меню')
-        type_animal = input('Введите пункт меню: ')
-        if(type_animal == '0'):
+        for key in animal_types:
+            print(f"{key}. {animal_types[key][1]}")
+        print('0. В главное меню')
+        animal_type = input('Введите пункт меню: ')
+        if(animal_type == '0'):
             menu_main()
-        if type_animal < '0' or int(type_animal) > len(animals):
+        if animal_type < '0' or int(animal_type) > len(animal_types):
             print('Пункта с таким номером нет!!!')
     
-    name = input('Введите имя животного: ')
+    animal_name = request_animal_name()
 
-    birth_day = input('Введите дату рождения животного: ')
+    animal_birth_day = request_birth_day()      
 
-    match animals[type_animal][1]:
-        case 'Лошадь':   
-            new_animal = Horse(name, animals[type_animal][1], birth_day)
-        case 'Кот':   
-            new_animal = Cat(name, animals[type_animal][1], birth_day)
-        case 'Осёл':   
-            new_animal = Donkey(name, animals[type_animal][1], birth_day)
-        case 'Собака':   
-            new_animal = Dog(name, animals[type_animal][1], birth_day)
-        case 'Верблюд':   
-            new_animal = Camel(name, animals[type_animal][1], birth_day)
-        case 'Хомяк':   
-            new_animal = Hamster(name, animals[type_animal][1], birth_day)
+    if not check_double_animal(animal_name, animal_types[animal_type][1], animal_birth_day):
+         menu_add_animal()
 
-    # print(animals[type_animal][1]) 
+    # question = f'{animal_classes[new_animal.get_parent_type()].lower()} {animal_type.lower()} с именем {animal_name} и датой рождения {animal_birth_day}'
 
-    # print(animal_types[new_animal.get_parent_type()])
+    
 
-    # print('Добавлено животное: ' + new_animal.show_animal())
+    # # question = f'Добавить {animal_classes[new_animal.get_parent_type()].lower()} {animal_type.lower()} с именем {animal_name} и датой рождения {animal_birth_day} в реестр? \nВведите "yes" или "no": '
+        
+    # answer = input(f'Добавить {question}, "yes" или "no"? ')
 
-    print(animal_types[new_animal.get_parent_type()] + ',' + animals[type_animal][1] + ',' + name + ',' + birth_day)
-    write_to_file([animal_types[new_animal.get_parent_type()],animals[type_animal][1],name,birth_day])
+    # create_animal(animal_name, animal_types[animal_type][1], animal_birth_day)
