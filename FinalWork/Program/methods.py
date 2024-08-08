@@ -9,20 +9,21 @@ def write_to_file(animal):
     with open('FinalWork\Program\List of animals.csv', 'a', encoding='utf-8') as file:
         file.write(animal)
 
-def check_animal_name(animal_name):
+def is_name(animal_name):
+    s = '.:;!_*+()/#%&'
     if len(animal_name) > 0 and len(animal_name.strip()) == 0:
         print('Имя не может состоять только из пробелов!')
         return False
-    if len(animal_name) == 0:
+    elif len(animal_name) == 0:
         print('Слишком короткое имя!')
-        return False
-    if animal_name.find(';') != -1:
-        print('В имени не может быть символа ";"!')
-        return False       
-    else:
-        return True
+        return False    
+    for char in s:
+        if char in animal_name:
+            print (f'Введён недопустимый символ - {char}!')
+            return False
+    return True
 
-def check_date(birth_day):
+def is_date(birth_day):
     try:
         date_birth_day = datetime.strptime(birth_day, '%Y-%m-%d').date()
         cur_date = datetime.now().date()
@@ -34,17 +35,23 @@ def check_date(birth_day):
         print('Введён неверный формат даты!')
         return False
 
-def check_duplicate_animal(animal_type, animal_name, animal_birth_day):
+def is_duplicate_animal(animal_type, animal_name, animal_birth_day):
     with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
         animal_list = file.read().rstrip().split('\n')
         if animal_list[0] != '':
             for animal_of_list in animal_list:
                 animal = animal_of_list.rstrip().split(';')
-                if animal_name == animal[1] and animal_type == animal[2] and animal_birth_day == animal[3]:
+                if animal_type == animal[1] and animal_name.lower() == animal[2].lower() and animal_birth_day == animal[3]:
                     print(f'В базе уже есть {animal[1].lower()} с именем {animal[2]} и датой рождения {animal[3]}')
-                    return False
-        else:
-            return True
+                    return True
+    return False
+
+def is_correct_commands(commands):
+    s = '.:;!_*+()/#%&'
+    for char in s:
+        if char in commands:
+            print (f'Введён недопустимый символ - {char}!')
+            return False
     return True
 
 def extract_animal_commands(animal_commands):
@@ -55,7 +62,6 @@ def extract_animal_commands(animal_commands):
         if len(command.strip())> 0:
             commands.add(command.strip()) 
     commands_str = ','.join(commands)
-
     return commands_str
 
 def create_animal(animal_name, animal_type, animal_birth_day, commands):
@@ -72,5 +78,57 @@ def create_animal(animal_name, animal_type, animal_birth_day, commands):
             new_animal = Camel(animal_name, animal_type, animal_birth_day, commands)
         case 'Хомяк':   
             new_animal = Hamster(animal_name, animal_type, animal_birth_day, commands)
-        
     write_to_file(f'{animal_classes[new_animal.get_parent_type()]};{new_animal.get_type()};{new_animal.get_name()};{new_animal.get_birth_day()};{new_animal.commands}\n')
+
+def is_list_empty():
+    with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
+        animal_list = file.read().strip().split('\n')
+        if animal_list[0] == '':
+            print('Реестр животных пуст!')
+            return True
+    return False
+
+def show_animal_sizes(show_type, show_animal, show_name, show_date, show_commands):   
+    with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
+        animal_list = file.read().strip().split('\n') 
+    size_type = len(show_type)
+    size_animal = len(show_animal)
+    size_name = len(show_name)
+    size_date = len(show_date)
+    size_commands = len(show_commands)
+    for animal_str in animal_list:
+        animal = animal_str.split(';')
+        if len(animal[0]) > size_type:
+            size_type = len(animal[0]) 
+        if len(animal[1]) > size_animal:
+            size_animal = len(animal[1]) 
+        if len(animal[2]) > size_name:
+            size_name = len(animal[2]) 
+        if len(animal[3]) > size_date:
+            size_date = len(animal[3]) 
+        if len(animal[4]) > size_commands:
+            size_commands = len(animal[4]) 
+    return [size_type, size_animal, size_name, size_date, size_commands]
+
+def search_name(name_for_delete):
+    with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
+        animal_list = file.read().strip().split('\n') 
+    result = []
+    i = 0
+    for animal_str in animal_list:
+        animal = animal_str.split(';')
+        if name_for_delete.lower() == animal[2].lower():
+            result.append([len(result) + 1, animal[1], animal[2], animal[3], animal[4], i])
+        i = i + 1
+    if len(result) == 0 and name_for_delete != '':
+        print(f'Не найдено животное с именем {name_for_delete}')   
+        return 0 
+    else:
+        return result
+    
+def delete_animal(index):
+    with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
+        animal_list = file.read().strip().split('\n')   
+        animal_list.pop(index)
+        with open('FinalWork\Program\List of animals.csv', 'w', encoding='utf-8') as file:
+            file.write('\n'.join(animal_list))        
