@@ -1,10 +1,7 @@
 from methods import *
+import datetime
 
 def menu_main():
-
-
-    '2024-2-10'
-
 
     command = '-1'
     while command != '0':
@@ -37,22 +34,24 @@ def menu_main():
 
 def menu_add_animal():
 
+    # Выбор типа животного
     animal_type = '0'
-    print(animal_type.isdigit())
-    print(int(animal_type) <= 0)
-    print(int(animal_type) > len(animal_types))
-    while animal_type.isdigit() and (int(animal_type) <= 0 or int(animal_type) > len(animal_types)):
-
+    # while int(animal_type) <= 0 or int(animal_type) > len(animal_types):
+    while int(animal_type) <= 0 or int(animal_type) > len(animal_types):
         print('-' * 100)
         print('Выберите вид животного:')
         for key in animal_types:
             print(f"{key}. {animal_types[key][1]}")
         print('0. В главное меню')
         animal_type = input('Введите пункт меню: ')
-        if(animal_type == '0'):
+        if animal_type in ('','0'):
             menu_main()
-        if int(animal_type) < 0 or int(animal_type) > len(animal_types):
-            print('Пункта с таким номером нет!')
+        if animal_type.isdigit():
+            if int(animal_type) < 0 or int(animal_type) > len(animal_types):
+                print(f'Пункта с номером "{animal_type}" нет!')
+        else:
+            print(f'Пункта с номером "{animal_type}" нет!')
+            animal_type = '0'
 
     flag = True
     while flag:
@@ -70,23 +69,19 @@ def menu_add_animal():
         if is_date(animal_birth_day):
             if animal_birth_day =='0':
                 menu_main()
+            animal_birth_day = datetime.datetime.strptime(animal_birth_day, "%Y-%m-%d")
             flag = False
 
     if is_duplicate_animal(animal_types[animal_type][1], animal_name, animal_birth_day):
          menu_add_animal()
 
-    answer = ''
-    while answer.lower() !='да':
+    flag = True
+    while flag:
         print('-' * 100) 
         animal_commands = input(f'Введите команды, которые {animal_name} уже знает, разделяя их запятой: ')
         if is_correct_commands(animal_commands):
-            commands_str = extract_animal_commands(animal_commands)
-            # if commands_str == '':
-            #     answer = input('Оставить поле с командами пустым? "да" или "нет": ')
-            # else:
-            #     answer = input(f'Оставить эти команды: {commands_str}? "да" или "нет": ')
-            if answer.lower() not in ('да', 'нет'):
-                print('Введён некорретный ответ!')
+            animal_commands = extract_animal_commands(animal_commands)
+            flag = False
             
     animal = f'{animal_types[animal_type][2].lower()} {animal_types[animal_type][1].lower()} с именем {animal_name} и датой рождения {animal_birth_day}'
     answer = ''
@@ -94,9 +89,9 @@ def menu_add_animal():
         print('-' * 100)
         answer = input(f'Добавить {animal}? "да" или "нет": ')
         if answer.lower() == 'да':
-            create_animal(animal_name,animal_types[animal_type][1],animal_birth_day,commands_str)
+            create_animal(animal_name,animal_types[animal_type][1],animal_birth_day,animal_commands)
             print(f'В реестр добавлено {animal}!')
-        elif answer.lower() in ('нет','0'):
+        elif answer.lower() in ('нет'):
             menu_main()
         else:
             print('Введён некорретный ответ!')
@@ -155,6 +150,12 @@ def menu_remove_animal():
                     else:
                         print('Введён некорретный ответ!')
             else:
+
+                # if animal_type.isdigit():
+                #     if int(animal_type) < 0 or int(animal_type) > len(animal_types):
+                #         print(f'Пункта с номером "{animal_type}" нет!')
+
+
                 answer = '0'
                 while answer < '1' or answer > str(len(animal_list)):
                     print('-' * 100) 

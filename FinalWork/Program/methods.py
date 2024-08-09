@@ -55,7 +55,7 @@ def is_correct_commands(commands):
     return True
 
 def extract_animal_commands(animal_commands):
-    print('-' * 60)
+    print('-' * 100)
     commands_list = animal_commands.strip().split(',')
     commands = set()
     for command in commands_list:
