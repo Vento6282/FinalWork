@@ -8,6 +8,7 @@ from dictionaries.dict import animal_classes
 def write_to_file(animal):
     with open('FinalWork\Program\List of animals.csv', 'a', encoding='utf-8') as file:
         file.write(animal)
+        file.write('\n')
 
 def is_name(animal_name):
     s = '.:;!_*+()/#%&'
@@ -41,7 +42,7 @@ def is_duplicate_animal(animal_type, animal_name, animal_birth_day):
         if animal_list[0] != '':
             for animal_of_list in animal_list:
                 animal = animal_of_list.rstrip().split(';')
-                if animal_type == animal[1] and animal_name.lower() == animal[2].lower() and animal_birth_day == animal[3]:
+                if animal_type.lower() == animal[1].lower() and animal_name.lower() == animal[2].lower() and str(animal_birth_day) == str(animal[3]):
                     print(f'В базе уже есть {animal[1].lower()} с именем {animal[2]} и датой рождения {animal[3]}')
                     return True
     return False
@@ -54,16 +55,17 @@ def is_correct_commands(commands):
             return False
     return True
 
+# преобразорвание строки в формат, необходимый для поля с командами
 def extract_animal_commands(animal_commands):
-    print('-' * 100)
     commands_list = animal_commands.strip().split(',')
     commands = set()
     for command in commands_list:
         if len(command.strip())> 0:
             commands.add(command.strip()) 
     commands_str = ','.join(commands)
-    return commands_str
+    return commands_str.lower()
 
+# создание объекта необходимого класса
 def create_animal(animal_name, animal_type, animal_birth_day, commands):
     match animal_type:
         case 'Лошадь':   
@@ -78,8 +80,9 @@ def create_animal(animal_name, animal_type, animal_birth_day, commands):
             new_animal = Camel(animal_name, animal_type, animal_birth_day, commands)
         case 'Хомяк':   
             new_animal = Hamster(animal_name, animal_type, animal_birth_day, commands)
-    write_to_file(f'{animal_classes[new_animal.get_parent_type()]};{new_animal.get_type()};{new_animal.get_name()};{new_animal.get_birth_day()};{new_animal.commands}\n')
+    return new_animal
 
+# проверка, есть ли в таблице хоть одна запись
 def is_list_empty():
     with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
         animal_list = file.read().strip().split('\n')
@@ -88,6 +91,7 @@ def is_list_empty():
             return True
     return False
 
+# определение размеров полей для отображения таблицы
 def show_animal_sizes(show_type, show_animal, show_name, show_date, show_commands):   
     with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
         animal_list = file.read().strip().split('\n') 
@@ -110,25 +114,29 @@ def show_animal_sizes(show_type, show_animal, show_name, show_date, show_command
             size_commands = len(animal[4]) 
     return [size_type, size_animal, size_name, size_date, size_commands]
 
-def search_name(name_for_delete):
+# поиск записи по имени
+def search_name(animal_name):
     with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
         animal_list = file.read().strip().split('\n') 
     result = []
     i = 0
     for animal_str in animal_list:
         animal = animal_str.split(';')
-        if name_for_delete.lower() == animal[2].lower():
-            result.append([len(result) + 1, animal[1], animal[2], animal[3], animal[4], i])
+        if animal_name.lower() == animal[2].lower():
+            result.append([len(result) + 1,animal[0], animal[1], animal[2], animal[3], animal[4], i])
         i = i + 1
-    if len(result) == 0 and name_for_delete != '':
-        print(f'Не найдено животное с именем {name_for_delete}')   
-        return 0 
+    if len(result) == 0 and animal_name != '':
+        print(f'Не найдено животное с именем {animal_name}')   
+        return 0
     else:
         return result
     
+# удаление записи из таблицы
 def delete_animal(index):
     with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
         animal_list = file.read().strip().split('\n')   
         animal_list.pop(index)
         with open('FinalWork\Program\List of animals.csv', 'w', encoding='utf-8') as file:
             file.write('\n'.join(animal_list))        
+        with open('FinalWork\Program\List of animals.csv', 'a', encoding='utf-8') as file:
+            file.write('\n')  

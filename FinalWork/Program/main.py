@@ -1,3 +1,3 @@
-from interfaces import *
+from interface import *
 
 menu_main()
