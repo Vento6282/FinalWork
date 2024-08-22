@@ -1,15 +1,16 @@
 from datetime import datetime
-
 from classes.Pet import *
 from classes.PackAnimal import *
 from dictionaries.dict import animal_types
 from dictionaries.dict import animal_classes
 
+# добавление записи в файл
 def write_to_file(animal):
     with open('FinalWork\Program\List of animals.csv', 'a', encoding='utf-8') as file:
         file.write(animal)
         file.write('\n')
 
+# проверка корректности имени
 def is_name(animal_name):
     s = '.:;!_*+()/#%&'
     if len(animal_name) > 0 and len(animal_name.strip()) == 0:
@@ -24,6 +25,7 @@ def is_name(animal_name):
             return False
     return True
 
+# проверка, что дата корректного формата
 def is_date(birth_day):
     try:
         date_birth_day = datetime.strptime(birth_day, '%Y-%m-%d').date()
@@ -36,6 +38,7 @@ def is_date(birth_day):
         print('Введён неверный формат даты!')
         return False
 
+# проверка, есть ли дубликаты записи по типу, имени и дате рождения
 def is_duplicate_animal(animal_type, animal_name, animal_birth_day):
     with open('FinalWork\Program\List of animals.csv', 'r', encoding='UTF-8') as file:
         animal_list = file.read().rstrip().split('\n')
@@ -43,10 +46,11 @@ def is_duplicate_animal(animal_type, animal_name, animal_birth_day):
             for animal_of_list in animal_list:
                 animal = animal_of_list.rstrip().split(';')
                 if animal_type.lower() == animal[1].lower() and animal_name.lower() == animal[2].lower() and str(animal_birth_day) == str(animal[3]):
-                    print(f'В базе уже есть {animal[1].lower()} с именем {animal[2]} и датой рождения {animal[3]}')
+                    print(f'В базе уже есть {animal[1].lower()} с именем {animal[2]} и датой рождения {animal[3][:-9]}')
                     return True
     return False
 
+# проверка строки с командами
 def is_correct_commands(commands):
     s = '.:;!_*+()/#%&'
     for char in s:

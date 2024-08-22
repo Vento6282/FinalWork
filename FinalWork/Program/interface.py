@@ -1,8 +1,8 @@
 from methods import *
 import datetime
 
+# визуализация и реализация пунктов основного меню
 def menu_main():
-
     command = '-1'
     while command != '0':
         print('-' * 100)
@@ -17,7 +17,6 @@ def menu_main():
         
         if (command not in ('1', '2', '3', '4', '0')):
             print('Пункта с таким номером нет!')
-
         match command:
             case '1':   
                 menu_add_animal()
@@ -32,6 +31,7 @@ def menu_main():
                 print('До новых встреч!')
                 print('-' * 100)
 
+# визуализация и реализация пункта "Добавить животное"
 def menu_add_animal():
 
     # Выбор типа животного
@@ -104,6 +104,7 @@ def menu_add_animal():
             print('Введён некорретный ответ!')
     menu_main()
 
+# визуализация и реализация вывода таблицы с животными
 def show_animals():
     show_type = 'Тип: '
     show_animal = 'Животное: '
@@ -129,6 +130,7 @@ def show_animals():
               f'{animal[3][:-9]}{' ' * 6}',
               f'{animal[4]}{' ' * (sizes[4] - len(animal[4])+ 1)}')
 
+# визуализация и реализация пункта "Удалить животное"
 def menu_remove_animal():
     if not is_list_empty():
         flag = True
@@ -138,6 +140,9 @@ def menu_remove_animal():
             while len(name_for_delete.strip()) == 0:
                 print('-' * 100)
                 name_for_delete = input('Введите имя животного, которого необходимо удалить из реестра: ') 
+                if len(name_for_delete) == 0:
+                    print('Удаление отменено!')
+                    menu_main()
                 if len(name_for_delete.strip()) == 0:
                     print('Имя не может быть пустым или состоять из одних пробелов!')
             animal_list = search_name(name_for_delete)
@@ -145,7 +150,7 @@ def menu_remove_animal():
                 menu_main()
             print('-' * 100)
             for animal in animal_list:
-                print(f'{animal[0]}. Удалить {animal[1].lower()} {animal[2].lower()} {animal[3]} с датой рождения {animal[4][:-9]}.')
+                print(f'{animal[0]}. Удалить {animal[1].lower()} {animal[2].lower()} по имени {animal[3]} с датой рождения {animal[4][:-9]}.')
             print('0. Выход в главное меню.')
             
             answer = input('Введите пункт меню: ') 
@@ -172,7 +177,8 @@ def menu_remove_animal():
                         print('Необходимо ввести "да" или "нет"!')
             else:
                 print(f'Пункта с номером "{answer}" нет!')
-                
+
+# визуализация и реализация пункта "Обучить животное новым командам"                
 def add_new_commands():
     if not is_list_empty():
         flag = True
@@ -181,6 +187,9 @@ def add_new_commands():
             while len(name_for_learning.strip()) == 0:
                 print('-' * 100)
                 name_for_learning = input('Введите имя животного, которого необходимо обучить новым командам: ') 
+                if len(name_for_learning) == 0:
+                    print('Добавление команд отменено!')
+                    menu_main()
                 if len(name_for_learning.strip()) == 0:
                     print('Имя не может быть пустым или состоять из одних пробелов!')
             animal_list = search_name(name_for_learning)
@@ -188,22 +197,25 @@ def add_new_commands():
                 menu_main()
             print('-' * 100)
             for animal in animal_list:
-                print(f'{animal[0]}. Обучить {animal[1].lower()} {animal[2].lower()} {animal[3]} с датой рождения {animal[4][:-9]}.')
+                print(f'{animal[0]}. Обучить {animal[1].lower()} {animal[2].lower()} по имени {animal[3]} с датой рождения {animal[4][:-9]}.')
             print('0. Выход в главное меню.')
             answer = input('Введите пункт меню: ') 
             if answer == '0':
                 menu_main()
             if answer.isdigit() and int(answer) > 0 and int(answer) <= len(animal_list):
                 index = int(answer) - 1 # Приводим номер нужной записи в соответствеие с индексом массива
-                if animal_list[0][4] =='':
+                if animal_list[index][5] =='':
                     print('-' * 100) 
                     print(f'{animal_list[index][2]} {animal_list[index][3]} пока не знает ни одной команды.')
                 else:
                     print('-' * 100) 
                     print(f'{animal_list[index][2]} {animal_list[index][3]} уже знает команды: {animal_list[index][5]}.')
-                new_command = input('Введите через запятую команды , которые нужно добавить: ')
+                new_command = input('Введите через запятую команды, которые нужно добавить: ')
+                if new_command == '':
+                    print('Добавление команд отменено!')
+                    menu_main()
                 if is_correct_commands(new_command):
-                    animal_list[index][5] = extract_animal_commands(animal_list[0][5] +','+ new_command)
+                    animal_list[index][5] = extract_animal_commands(animal_list[index][5] +','+ new_command)
                     write_to_file(f'{animal_list[index][1]};{animal_list[index][2]};{animal_list[index][3]};{animal_list[index][4]};{animal_list[index][5]}')
                     delete_animal(animal_list[index][6])
                     flag = False
