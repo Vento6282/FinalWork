@@ -5,6 +5,8 @@ class PackAnimal(Animal, ABC):
     def __init__(self, name, type_animal, birth_day, commands):
         super().__init__(name, type_animal, birth_day)
         self.commands = commands
+    def get_commands(self):
+        return self._commands
 
 class Camel(PackAnimal):
     def __init__(self, name, type_animal, birth_day, commands):
